@@ -51,7 +51,7 @@ public class LocadorPerfilView {
                 if (response == ButtonType.YES) {
                     ArrayList<Locador> todos = Arquivo.carregar("locadores.dat");
                     todos.remove(locador);
-                    Arquivo.carregar("locadores.dat");
+                    Arquivo.carregar(todos,"locadores.dat");
                     SessaoUsuario.getInstancia().logout();
                     stage.setScene(new LoginView().getScene(stage));
                 }
