@@ -18,10 +18,10 @@ public class LocatarioHomeView {
         lblSaudacao.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         lblTipo.setStyle("-fx-font-size: 12px; -fx-text-fill: gray;");
 
-        Button btnPerfil   = new Button("👤  Meu Perfil");
-        Button btnReservas = new Button("📅  Minhas Reservas");
-        Button btnLobbies  = new Button("🎮  Lobbies");
-        Button btnTorneios = new Button("🏆  Torneios");
+        Button btnPerfil   = new Button("Meu Perfil");
+        Button btnReservas = new Button("Minhas Reservas");
+        Button btnLobbies  = new Button("Lobbies");
+        Button btnTorneios = new Button("Torneios");
         Button btnSair     = new Button("Sair");
 
         for (Button b : new Button[]{btnPerfil, btnReservas, btnLobbies, btnTorneios, btnSair})

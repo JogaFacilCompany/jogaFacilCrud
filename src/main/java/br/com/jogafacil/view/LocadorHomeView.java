@@ -18,13 +18,14 @@ public class LocadorHomeView {
         lblSaudacao.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
         lblTipo.setStyle("-fx-font-size: 12px; -fx-text-fill: gray;");
 
-        Button btnPerfil      = new Button("👤  Meu Perfil");
-        Button btnQuadras     = new Button("🏟️  Minhas Quadras");
-        Button btnGerentes    = new Button("👷  Meus Gerentes");
-        Button btnModalidades = new Button("⚽  Modalidades");
+        Button btnPerfil      = new Button("Meu Perfil");
+        Button btnQuadras     = new Button("Minhas Quadras");
+        Button btnGerentes    = new Button("Meus Gerentes");
+        Button btnModalidades = new Button("Modalidades");
+        Button btnArbitros    = new Button("Árbitros");
         Button btnSair        = new Button("Sair");
 
-        for (Button b : new Button[]{btnPerfil, btnQuadras, btnGerentes, btnModalidades, btnSair})
+        for (Button b : new Button[]{btnPerfil, btnQuadras, btnGerentes, btnModalidades, btnArbitros, btnSair})
             b.setMaxWidth(Double.MAX_VALUE);
 
         btnSair.setStyle("-fx-text-fill: red;");
@@ -40,6 +41,10 @@ public class LocadorHomeView {
                 e -> stage.setScene(new ModalidadeView().getSceneLista(stage))
         );
 
+        btnArbitros.setOnAction(
+                e -> stage.setScene(new ArbitroView().getSceneLista(stage))
+        );
+
         btnSair.setOnAction(e -> {
             SessaoUsuario.getInstancia().logout();
             stage.setScene(new LoginView().getScene(stage));
@@ -48,7 +53,7 @@ public class LocadorHomeView {
         VBox cabecalho = new VBox(4, lblSaudacao, lblTipo);
         VBox navegacao = new VBox(8,
                 btnPerfil, new Separator(),
-                btnQuadras, btnGerentes, btnModalidades,
+                btnQuadras, btnGerentes, btnModalidades, btnArbitros,
                 new Separator(), btnSair
         );
         navegacao.setFillWidth(true);
