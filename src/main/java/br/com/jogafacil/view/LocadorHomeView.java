@@ -35,7 +35,7 @@ public class LocadorHomeView {
         );
 
         // Conecte quando os alunos 1 e 4 terminarem:
-        // btnQuadras.setOnAction(e -> stage.setScene(new QuadraView().getSceneLista(stage)));
+        btnQuadras.setOnAction(e -> stage.setScene(new QuadraView().getSceneLista(stage)));
         // btnGerentes.setOnAction(e -> stage.setScene(new GerenteView().getSceneLista(stage)));
         btnModalidades.setOnAction(
                 e -> stage.setScene(new ModalidadeView().getSceneLista(stage))
