@@ -1,5 +1,6 @@
 module br.com.jogafacil {
-    requires javafx.controls;
+    requires transitive javafx.controls;
+    requires transitive javafx.graphics;
     exports br.com.jogafacil;
     exports br.com.jogafacil.util;
     exports br.com.jogafacil.model;

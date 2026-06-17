@@ -1,17 +1,27 @@
 package br.com.jogafacil.view;
 
+import java.util.ArrayList;
+
 import br.com.jogafacil.model.Equipamento;
 import br.com.jogafacil.util.Arquivo;
+import br.com.jogafacil.util.SessaoUsuario;
 import br.com.jogafacil.util.Validador;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 public class EquipamentoView {
 
@@ -73,14 +83,20 @@ public class EquipamentoView {
             });
         });
 
-        // TODO: trocar por new GerenteHomeView().getScene(stage) quando o Aluno 4 implementar
-        btnVoltar.setOnAction(e -> stage.setScene(new LoginView().getScene(stage)));
+        btnVoltar.setOnAction(e -> {
+            if (SessaoUsuario.getInstancia().isGerente()) {
+                stage.setScene(new GerenteHomeView().getScene(stage));
+            } else {
+                stage.setScene(new LocadorHomeView().getScene(stage));
+            }
+        });
 
         HBox botoes = new HBox(10, btnNovo, btnEditar, btnExcluir, btnVoltar);
 
         VBox layout = new VBox(15, titulo, new Separator(), tabela, lblErro, botoes);
         layout.setPadding(new Insets(30));
         layout.setAlignment(Pos.TOP_LEFT);
+
 
         return new Scene(layout, 600, 420);
     }

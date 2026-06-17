@@ -23,9 +23,10 @@ public class LocadorHomeView {
         Button btnGerentes    = new Button("Meus Gerentes");
         Button btnModalidades = new Button("Modalidades");
         Button btnArbitros    = new Button("Árbitros");
+        Button btnTorneios    = new Button("Torneios");
         Button btnSair        = new Button("Sair");
 
-        for (Button b : new Button[]{btnPerfil, btnQuadras, btnGerentes, btnModalidades, btnArbitros, btnSair})
+        for (Button b : new Button[]{btnPerfil, btnQuadras, btnGerentes, btnModalidades, btnArbitros, btnTorneios, btnSair})
             b.setMaxWidth(Double.MAX_VALUE);
 
         btnSair.setStyle("-fx-text-fill: red;");
@@ -34,9 +35,8 @@ public class LocadorHomeView {
                 stage.setScene(new LocadorPerfilView().getScene(stage))
         );
 
-        // Conecte quando os alunos 1 e 4 terminarem:
         btnQuadras.setOnAction(e -> stage.setScene(new QuadraView().getSceneLista(stage)));
-        // btnGerentes.setOnAction(e -> stage.setScene(new GerenteView().getSceneLista(stage)));
+        btnGerentes.setOnAction(e -> stage.setScene(new GerenteView().getSceneLista(stage)));
         btnModalidades.setOnAction(
                 e -> stage.setScene(new ModalidadeView().getSceneLista(stage))
         );
@@ -44,6 +44,8 @@ public class LocadorHomeView {
         btnArbitros.setOnAction(
                 e -> stage.setScene(new ArbitroView().getSceneLista(stage))
         );
+
+        btnTorneios.setOnAction(e -> stage.setScene(new TorneioView().getSceneLista(stage)));
 
         btnSair.setOnAction(e -> {
             SessaoUsuario.getInstancia().logout();
@@ -53,7 +55,7 @@ public class LocadorHomeView {
         VBox cabecalho = new VBox(4, lblSaudacao, lblTipo);
         VBox navegacao = new VBox(8,
                 btnPerfil, new Separator(),
-                btnQuadras, btnGerentes, btnModalidades, btnArbitros,
+                btnQuadras, btnGerentes, btnModalidades, btnArbitros, btnTorneios,
                 new Separator(), btnSair
         );
         navegacao.setFillWidth(true);

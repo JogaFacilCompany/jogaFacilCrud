@@ -1,7 +1,7 @@
 package br.com.jogafacil.view;
 
 //import br.com.jogafacil.model.Arbitro;
-//import br.com.jogafacil.model.Gerente;
+import br.com.jogafacil.model.Gerente;
 import br.com.jogafacil.model.Locador;
 import br.com.jogafacil.model.Locatario;
 import br.com.jogafacil.util.Arquivo;
@@ -72,14 +72,14 @@ public class LoginView {
                 }
             }
 
-            // List<Gerente> gerentes = Arquivo.carregar("gerentes.dat");
-            // for (Gerente u : gerentes) {
-            //     if (u.getEmail().equalsIgnoreCase(email) && u.getSenha().equals(senha)) {
-            //         SessaoUsuario.getInstancia().login("GERENTE", u.getEmail(), u);
-            //         abrirMenuPrincipal(stage);
-            //         return;
-            //     }
-            // }
+            ArrayList<Gerente> gerentes = Arquivo.carregar("gerentes.dat");
+            for (Gerente u : gerentes) {
+                if (u.getEmail().equalsIgnoreCase(email) && u.getSenha().equals(senha)) {
+                    SessaoUsuario.getInstancia().login(u);
+                    abrirMenuPrincipal(stage);
+                    return;
+                }
+            }
 
             // List<Arbitro> arbitros = Arquivo.carregar("arbitros.dat");
             // for (Arbitro u : arbitros) {
@@ -126,6 +126,8 @@ public class LoginView {
             stage.setScene(new LocadorHomeView().getScene(stage));
         } else if (sessao.isLocatario()) {
             stage.setScene(new LocatarioHomeView().getScene(stage));
+        } else if (sessao.isGerente()) {
+            stage.setScene(new GerenteHomeView().getScene(stage));
         }
 
     }
