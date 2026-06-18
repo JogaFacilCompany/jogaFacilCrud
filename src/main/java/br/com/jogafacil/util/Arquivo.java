@@ -13,7 +13,7 @@ public class Arquivo {
 
         try (ObjectOutputStream oos = new ObjectOutputStream(
                 new FileOutputStream(PASTA + nomeArquivo))) {
-            oos.writeObject(lista);
+             oos.writeObject(lista);
         } catch (IOException e) {
             System.err.println("Erro ao salvar " + nomeArquivo + ": " + e.getMessage());
         }

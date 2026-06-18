@@ -30,14 +30,17 @@ public class GerenteHomeView {
         cardQuadra.setPadding(new Insets(10));
         cardQuadra.setStyle("-fx-border-color: #ccc; -fx-border-radius: 4; -fx-background-color: #f7f7f7;");
 
+        Button btnReservas = new Button("Reservas");
         Button btnEquipamentos = new Button("Equipamentos");
         Button btnTorneios     = new Button("Torneios");
         Button btnSair         = new Button("Sair");
 
-        for (Button b : new Button[]{btnEquipamentos, btnTorneios, btnSair})
+        for (Button b : new Button[]{btnReservas, btnEquipamentos, btnTorneios, btnSair})
             b.setMaxWidth(Double.MAX_VALUE);
         btnSair.setStyle("-fx-text-fill: red;");
 
+        btnReservas.setOnAction(e ->
+                stage.setScene(new ReservaView().getSceneLista(stage)));
         btnEquipamentos.setOnAction(e -> stage.setScene(new EquipamentoView().getSceneLista(stage)));
         btnTorneios.setOnAction(e -> stage.setScene(new TorneioView().getSceneLista(stage)));
         btnSair.setOnAction(e -> {
@@ -48,7 +51,7 @@ public class GerenteHomeView {
         VBox cabecalho = new VBox(4, lblSaudacao, lblTipo);
         VBox navegacao = new VBox(8,
                 cardQuadra, new Separator(),
-                btnEquipamentos, btnTorneios,
+                btnReservas, btnEquipamentos, btnTorneios,
                 new Separator(), btnSair
         );
         navegacao.setFillWidth(true);

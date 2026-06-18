@@ -1,6 +1,7 @@
 package br.com.jogafacil.view;
 
 import br.com.jogafacil.util.SessaoUsuario;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,8 +28,11 @@ public class LocatarioHomeView {
         for (Button b : new Button[]{btnPerfil, btnReservas, btnLobbies, btnTorneios, btnSair})
             b.setMaxWidth(Double.MAX_VALUE);
 
+        btnLobbies.setOnAction(e ->
+                stage.setScene(new LobbyView().getSceneLista(stage)));
         btnSair.setStyle("-fx-text-fill: red;");
-
+        btnReservas.setOnAction(e ->
+                stage.setScene(new ReservaView().getSceneLista(stage)));
         btnPerfil.setOnAction(e ->
                 stage.setScene(new LocatarioPerfilView().getScene(stage))
         );
