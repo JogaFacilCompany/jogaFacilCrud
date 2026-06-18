@@ -38,7 +38,6 @@ public class SessaoUsuario {
     public boolean isLocador()   { return "LOCADOR".equals(usuarioLogado.getTipo()); }
     public boolean isLocatario() { return "LOCATARIO".equals(usuarioLogado.getTipo()); }
     public boolean isGerente()   { return "GERENTE".equals(usuarioLogado.getTipo()); }
-    public boolean isArbitro()   { return "ARBITRO".equals(usuarioLogado.getTipo()); }
 
 
 

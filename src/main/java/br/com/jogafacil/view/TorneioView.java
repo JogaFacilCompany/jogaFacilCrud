@@ -63,6 +63,7 @@ public class TorneioView {
         Button btnExcluir = new Button("Excluir");
         Button btnVoltar  = new Button("Voltar");
 
+
         btnNovo.setOnAction(e -> stage.setScene(getSceneFormulario(stage, null, lista)));
 
         btnEditar.setOnAction(e -> {
