@@ -22,6 +22,7 @@ public class TorneioView {
     public Scene getSceneLista(Stage stage) {
         Label titulo = new Label("Torneios");
         titulo.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        SessaoUsuario sessao = SessaoUsuario.getInstancia();
 
         //Tabela
         TableView<Torneio> tabela = new TableView<>();
@@ -58,58 +59,91 @@ public class TorneioView {
         lblErro.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
 
         //Botões
-        Button btnNovo    = new Button("Novo Torneio");
-        Button btnEditar  = new Button("Editar");
-        Button btnExcluir = new Button("Excluir");
-        Button btnVoltar  = new Button("Voltar");
 
-
-        btnNovo.setOnAction(e -> stage.setScene(getSceneFormulario(stage, null, lista)));
-
-        btnEditar.setOnAction(e -> {
-            Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
-            if (selecionado == null) {
-                lblErro.setText("Selecione um torneio para editar.");
-                return;
-            }
-            stage.setScene(getSceneFormulario(stage, selecionado, lista));
-        });
-
-        btnExcluir.setOnAction(e -> {
-            Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
-            if (selecionado == null) {
-                lblErro.setText("Selecione um torneio para excluir.");
-                return;
-            }
-
-            Alert confirma = new Alert(Alert.AlertType.CONFIRMATION,
-                    "Excluir este torneio? Esta ação não pode ser desfeita.",
-                    ButtonType.YES, ButtonType.NO);
-            confirma.setTitle("Confirmar exclusão");
-            confirma.setHeaderText(null);
-            confirma.showAndWait().ifPresent(response -> {
-                if (response == ButtonType.YES) {
-                    lista.remove(selecionado);
-                    Arquivo.salvar(lista, "torneios.dat");
-                    stage.setScene(getSceneLista(stage));
-                }
-            });
-        });
+        Button btnVoltar = new Button("Voltar");
 
         btnVoltar.setOnAction(e -> {
             if (SessaoUsuario.getInstancia().isGerente()) {
                 stage.setScene(new GerenteHomeView().getScene(stage));
-            } else {
+            } else if(sessao.isLocador()) {
                 stage.setScene(new LocadorHomeView().getScene(stage));
+            } else if(sessao.isLocatario()){
+                stage.setScene(new LocatarioHomeView().getScene(stage));
             }
         });
 
-        HBox botoes = new HBox(10, btnNovo, btnEditar, btnExcluir, btnVoltar);
-
-        VBox layout = new VBox(15, titulo, new Separator(), tabela, lblErro, botoes);
+        VBox layout = new VBox(15, titulo, new Separator(), tabela, lblErro);
         layout.setPadding(new Insets(30));
         layout.setAlignment(Pos.TOP_LEFT);
 
+        if (sessao.isLocador()) {
+            Button btnNovo = new Button("Novo Torneio");
+            Button btnEditar = new Button("Editar");
+            Button btnExcluir = new Button("Excluir");
+
+
+            btnNovo.setOnAction(e -> stage.setScene(getSceneFormulario(stage, null, lista)));
+
+            btnEditar.setOnAction(e -> {
+                Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
+                if (selecionado == null) {
+                    lblErro.setText("Selecione um torneio para editar.");
+                    return;
+                }
+                stage.setScene(getSceneFormulario(stage, selecionado, lista));
+            });
+
+            btnExcluir.setOnAction(e -> {
+                Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
+                if (selecionado == null) {
+                    lblErro.setText("Selecione um torneio para excluir.");
+                    return;
+                }
+
+                Alert confirma = new Alert(Alert.AlertType.CONFIRMATION,
+                        "Excluir este torneio? Esta ação não pode ser desfeita.",
+                        ButtonType.YES, ButtonType.NO);
+                confirma.setTitle("Confirmar exclusão");
+                confirma.setHeaderText(null);
+                confirma.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.YES) {
+                        lista.remove(selecionado);
+                        Arquivo.salvar(lista, "torneios.dat");
+                        stage.setScene(getSceneLista(stage));
+                    }
+                });
+            });
+
+            HBox botoes = new HBox(10, btnNovo, btnEditar, btnExcluir, btnVoltar);
+            layout.getChildren().add(botoes);
+
+
+        } else if (sessao.isLocatario()) {
+            Button btnEntrar = new Button("Entrar");
+
+            btnEntrar.setOnAction(e -> {
+                Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
+
+                if (selecionado == null) {
+                    lblErro.setText("Selecione um torneio para entrar.");
+                }
+
+                if (selecionado.isOnTorneio(sessao.getUsuarioLogado())) {
+                    lblErro.setText("Você já está nesse torneio.");
+                } else {
+                    selecionado.entrar(sessao.getUsuarioLogado());
+                    Arquivo.salvar(lista, "torneios.dat");
+                    stage.setScene(getSceneLista(stage));
+                }
+
+            });
+
+            HBox botoes = new HBox(10, btnEntrar, btnVoltar);
+            layout.getChildren().add(botoes);
+
+        }
+
+        layout.getChildren().add(btnVoltar);
         return new Scene(layout, 700, 440);
     }
 

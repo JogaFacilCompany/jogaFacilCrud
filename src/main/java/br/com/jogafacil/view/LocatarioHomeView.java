@@ -36,7 +36,9 @@ public class LocatarioHomeView {
         btnPerfil.setOnAction(e ->
                 stage.setScene(new LocatarioPerfilView().getScene(stage))
         );
-
+        btnTorneios.setOnAction(e ->
+                stage.setScene(new TorneioView().getSceneLista(stage))
+        );
 
         btnSair.setOnAction(e -> {
             SessaoUsuario.getInstancia().logout();

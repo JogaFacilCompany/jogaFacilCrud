@@ -1,6 +1,7 @@
 package br.com.jogafacil.view;
 
 import br.com.jogafacil.model.Gerente;
+import br.com.jogafacil.model.Usuario;
 import br.com.jogafacil.model.Locatario;
 import br.com.jogafacil.model.Quadra;
 import br.com.jogafacil.model.Reserva;
@@ -64,10 +65,19 @@ public class ReservaView {
 
         // Carrega os dados do disco e filtra de acordo com o perfil logado
         ArrayList<Reserva> todasReservas = Arquivo.carregar("reservas.dat");
-        ArrayList<Reserva> lista;
+        ArrayList<Reserva> lista = new ArrayList<>();
         if (isGerente) {
             Gerente gerente = (Gerente) sessao.getUsuarioLogado();
             lista = filtrarPorQuadraDoGerente(todasReservas, gerente);
+        } else if (sessao.isLocatario()) {
+            Usuario usuario = sessao.getUsuarioLogado();
+
+            for(Reserva reserva : todasReservas) {
+                if (reserva.getLocatario().getNome().equals(usuario.getNome())) {
+                    lista.add(reserva);
+                }
+            }
+
         } else {
             lista = todasReservas;
         }
