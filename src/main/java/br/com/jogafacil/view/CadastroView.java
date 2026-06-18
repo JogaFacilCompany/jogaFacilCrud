@@ -26,10 +26,8 @@ public class CadastroView {
         ToggleGroup grupo = new ToggleGroup();
         RadioButton rbLocador   = new RadioButton("Locador   (dono de quadras)");
         RadioButton rbLocatario = new RadioButton("Locatário (aluga quadras)");
-        RadioButton rbArbitro   = new RadioButton("Árbitro   (apita partidas)");
         rbLocador.setToggleGroup(grupo);
         rbLocatario.setToggleGroup(grupo);
-        rbArbitro.setToggleGroup(grupo);
         rbLocador.setSelected(true); // padrão
 
 
@@ -43,23 +41,6 @@ public class CadastroView {
         txtEmail.setMaxWidth(280);
         txtSenha.setMaxWidth(280);
 
-
-        // Label lblModalidade = new Label("Modalidade:");
-        // ComboBox<Modalidade> cmbModalidade = new ComboBox<>();
-        // cmbModalidade.getItems().addAll(Arquivo.carregar("modalidades.dat"));
-        // cmbModalidade.setMaxWidth(280);
-        //
-        // Label lblValor = new Label("Valor por hora (R$):");
-        // TextField txtValor = new TextField();
-        // txtValor.setPromptText("Ex: 80.00");
-        // txtValor.setMaxWidth(280);
-        //
-        // VBox camposArbitro = new VBox(8, lblModalidade, cmbModalidade, lblValor, txtValor);
-        // camposArbitro.setVisible(false);
-        //
-        // grupo.selectedToggleProperty().addListener((obs, ant, novo) -> {
-        //     camposArbitro.setVisible(novo == rbArbitro);
-        // });
 
         Label lblErro = new Label("");
         lblErro.setStyle("-fx-text-fill: red; -fx-font-size: 12px;");
@@ -98,13 +79,6 @@ public class CadastroView {
                 lista.add(new Locatario(nome, email, senha));
                 Arquivo.salvar(lista, "locatarios.dat");
 
-            } else if (rbArbitro.isSelected()) {
-                // List<Arbitro> lista = Arquivo.carregar("arbitros.dat");
-                // lista.add(new Arbitro(nome, email, senha,
-                //     cmbModalidade.getValue(), Validador.parseDouble(txtValor.getText())));
-                // Arquivo.salvar(lista, "arbitros.dat");
-                lblErro.setText("Cadastro de Árbitro disponível em breve.");
-                return;
             }
 
             mostrarInfo("Conta criada com sucesso! Faça login para continuar.");
@@ -115,7 +89,7 @@ public class CadastroView {
                 stage.setScene(new LoginView().getScene(stage))
         );
 
-        VBox tipoBox = new VBox(8, rbLocador, rbLocatario, rbArbitro);
+        VBox tipoBox = new VBox(8, rbLocador, rbLocatario);
         tipoBox.setPadding(new Insets(0, 0, 10, 0));
 
         VBox form = new VBox(8,
@@ -150,10 +124,6 @@ public class CadastroView {
         for (Locatario u : locatarios)
             if (u.getEmail().equalsIgnoreCase(email)) return true;
 
-        // Árbitro
-        // List<Arbitro> arbitros = Arquivo.carregar("arbitros.dat");
-        // for (Arbitro u : arbitros)
-        //     if (u.getEmail().equalsIgnoreCase(email)) return true;
 
         return false;
     }

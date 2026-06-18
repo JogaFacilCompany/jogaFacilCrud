@@ -37,10 +37,6 @@ public class LocatarioHomeView {
                 stage.setScene(new LocatarioPerfilView().getScene(stage))
         );
 
-        // Conecte quando os alunos 4 e 5 terminarem:
-        // btnReservas.setOnAction(e -> stage.setScene(new ReservaView().getSceneLista(stage)));
-        // btnLobbies.setOnAction(e -> stage.setScene(new LobbyView().getSceneLista(stage)));
-        // btnTorneios.setOnAction(e -> stage.setScene(new TorneioView().getSceneLista(stage)));
 
         btnSair.setOnAction(e -> {
             SessaoUsuario.getInstancia().logout();

@@ -81,15 +81,6 @@ public class LoginView {
                 }
             }
 
-            // List<Arbitro> arbitros = Arquivo.carregar("arbitros.dat");
-            // for (Arbitro u : arbitros) {
-            //     if (u.getEmail().equalsIgnoreCase(email) && u.getSenha().equals(senha)) {
-            //         SessaoUsuario.getInstancia().login("ARBITRO", u.getEmail(), u);
-            //         abrirMenuPrincipal(stage);
-            //         return;
-            //     }
-            // }
-
             lblErro.setText("Email ou senha incorretos.");
         });
 
