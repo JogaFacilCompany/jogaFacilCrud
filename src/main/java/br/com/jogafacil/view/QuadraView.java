@@ -125,42 +125,24 @@ public class QuadraView {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            Modalidade modalidade = cmbModalidade.getValue();
-            String cnpj     = txtCnpj.getText().trim();
-            String endereco = txtEndereco.getText().trim();
-            String valorTxt = txtValor.getText().trim();
-
-            if (modalidade == null) {
-                lblErro.setText("Selecione uma modalidade.");
-                return;
+            try {
+                Modalidade modalidade = cmbModalidade.getValue();
+                String cnpj     = txtCnpj.getText().trim();
+                String endereco = txtEndereco.getText().trim();
+                String valorTxt = txtValor.getText().trim();
+                if (modalidade == null) { lblErro.setText("Selecione uma modalidade."); return; }
+                if (cnpj.isEmpty()) { lblErro.setText("CNPJ é obrigatório."); return; }
+                if (endereco.isEmpty()) { lblErro.setText("Endereço é obrigatório."); return; }
+                if (!Validador.isNumeroValido(valorTxt)) { lblErro.setText("Valor inválido."); return; }
+                double valor = Validador.parseDouble(valorTxt);
+                if (!modoEdicao) { lista.add(new Quadra(modalidade, cnpj, endereco, valor)); }
+                else { quadra.setModalidade(modalidade); quadra.setCnpj(cnpj); quadra.setEndereco(endereco); quadra.setValor(valor); }
+                Arquivo.salvar(lista, "quadras.dat");
+                mostrarInfo("Quadra salva com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar quadra: " + ex.getMessage());
             }
-            if (cnpj.isEmpty()) {
-                lblErro.setText("CNPJ é obrigatório.");
-                return;
-            }
-            if (endereco.isEmpty()) {
-                lblErro.setText("Endereço é obrigatório.");
-                return;
-            }
-            if (!Validador.isNumeroValido(valorTxt)) {
-                lblErro.setText("Valor inválido.");
-                return;
-            }
-
-            double valor = Validador.parseDouble(valorTxt);
-
-            if (!modoEdicao) {
-                lista.add(new Quadra(modalidade, cnpj, endereco, valor));
-            } else {
-                quadra.setModalidade(modalidade);
-                quadra.setCnpj(cnpj);
-                quadra.setEndereco(endereco);
-                quadra.setValor(valor);
-            }
-
-            Arquivo.salvar(lista, "quadras.dat");
-            mostrarInfo("Quadra salva com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

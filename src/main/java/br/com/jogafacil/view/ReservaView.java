@@ -198,46 +198,25 @@ public class ReservaView {
         }
 
         btnSalvar.setOnAction(e -> {
-            String dataTxt    = txtData.getText().trim();
-            String horario    = txtHorario.getText().trim();
-            Quadra quadra      = cmbQuadra.getValue();
-            boolean extra      = chkExtra.isSelected();
-            String extraDescricao = txtExtraDescricao.getText().trim();
-
-            if (!Validador.isDataValida(dataTxt)) {
-                lblErro.setText("Data inválida. Use o formato dd/MM/yyyy.");
-                return;
+            try {
+                String dataTxt    = txtData.getText().trim();
+                String horario    = txtHorario.getText().trim();
+                Quadra quadra      = cmbQuadra.getValue();
+                boolean extra      = chkExtra.isSelected();
+                String extraDescricao = txtExtraDescricao.getText().trim();
+                if (!Validador.isDataValida(dataTxt)) { lblErro.setText("Data inválida. Use o formato dd/MM/yyyy."); return; }
+                if (horario.isEmpty()) { lblErro.setText("Horário é obrigatório."); return; }
+                if (quadra == null) { lblErro.setText("Selecione uma quadra."); return; }
+                if (extra && extraDescricao.isEmpty()) { lblErro.setText("Descreva o item/serviço extra."); return; }
+                LocalDate data = Validador.parseData(dataTxt);
+                if (!modoEdicao) { lista.add(new Reserva(locatarioLogado, data, horario, quadra, extra, extra ? extraDescricao : "")); }
+                else { reserva.setLocatario(locatarioLogado); reserva.setData(data); reserva.setHorario(horario); reserva.setQuadra(quadra); reserva.setExtra(extra); reserva.setExtraDescricao(extra ? extraDescricao : ""); }
+                Arquivo.salvar(lista, "reservas.dat");
+                mostrarInfo("Reserva salva com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar reserva: " + ex.getMessage());
             }
-            if (horario.isEmpty()) {
-                lblErro.setText("Horário é obrigatório.");
-                return;
-            }
-            if (quadra == null) {
-                lblErro.setText("Selecione uma quadra.");
-                return;
-            }
-            if (extra && extraDescricao.isEmpty()) {
-                lblErro.setText("Descreva o item/serviço extra.");
-                return;
-            }
-
-            LocalDate data = Validador.parseData(dataTxt);
-
-            if (!modoEdicao) {
-                lista.add(new Reserva(locatarioLogado, data, horario, quadra, extra,
-                        extra ? extraDescricao : ""));
-            } else {
-                reserva.setLocatario(locatarioLogado);
-                reserva.setData(data);
-                reserva.setHorario(horario);
-                reserva.setQuadra(quadra);
-                reserva.setExtra(extra);
-                reserva.setExtraDescricao(extra ? extraDescricao : "");
-            }
-
-            Arquivo.salvar(lista, "reservas.dat");
-            mostrarInfo("Reserva salva com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

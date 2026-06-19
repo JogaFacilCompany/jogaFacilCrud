@@ -105,38 +105,22 @@ public class ModalidadeView {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            String nome = txtNome.getText().trim();
-            String qtdTexto = txtQtd.getText().trim();
-            String descricao = txtDescricao.getText().trim();
-
-            if (nome.isEmpty()) {
-                lblErro.setText("Nome é obrigatório.");
-                return;
+            try {
+                String nome = txtNome.getText().trim();
+                String qtdTexto = txtQtd.getText().trim();
+                String descricao = txtDescricao.getText().trim();
+                if (nome.isEmpty()) { lblErro.setText("Nome é obrigatório."); return; }
+                if (descricao.isEmpty()) { lblErro.setText("Descrição é obrigatória."); return; }
+                if (!Validador.isInteiroPositivo(qtdTexto)) { lblErro.setText("Quantidade de jogadores inválida."); return; }
+                int qtd = Integer.parseInt(qtdTexto);
+                if (!modoEdicao) { lista.add(new Modalidade(nome, qtd, descricao)); }
+                else { modalidade.setNome(nome); modalidade.setQtdJogadores(qtd); modalidade.setDescricao(descricao); }
+                Arquivo.salvar(lista, "modalidades.dat");
+                mostrarInfo("Modalidade salva com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar modalidade: " + ex.getMessage());
             }
-
-            if (descricao.isEmpty()) {
-                lblErro.setText("Descrição é obrigatória.");
-                return;
-            }
-
-            if (!Validador.isInteiroPositivo(qtdTexto)) {
-                lblErro.setText("Quantidade de jogadores inválida.");
-                return;
-            }
-
-            int qtd = Integer.parseInt(qtdTexto);
-
-            if (!modoEdicao) {
-                lista.add(new Modalidade(nome, qtd, descricao));
-            } else {
-                modalidade.setNome(nome);
-                modalidade.setQtdJogadores(qtd);
-                modalidade.setDescricao(descricao);
-            }
-
-            Arquivo.salvar(lista, "modalidades.dat");
-            mostrarInfo("Modalidade salva com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

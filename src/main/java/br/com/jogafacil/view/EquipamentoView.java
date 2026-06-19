@@ -122,38 +122,24 @@ public class EquipamentoView {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            String nome = txtNome.getText().trim();
-            String valorTexto = txtValor.getText().trim();
-            String descricao = txtDescricao.getText().trim();
+            try {
+                String nome = txtNome.getText().trim();
+                String valorTexto = txtValor.getText().trim();
+                String descricao = txtDescricao.getText().trim();
 
-            if (nome.isEmpty()) {
-                lblErro.setText("Nome é obrigatório.");
-                return;
+                if (nome.isEmpty()) { lblErro.setText("Nome é obrigatório."); return; }
+
+                if (descricao.isEmpty()) { lblErro.setText("Descrição é obrigatória."); return; }
+                if (!Validador.isNumeroValido(valorTexto)) { lblErro.setText("Valor inválido."); return; }
+                double valor = Validador.parseDouble(valorTexto);
+                if (!modoEdicao) { lista.add(new Equipamento(nome, valor, descricao)); }
+                else { equipamento.setNome(nome); equipamento.setValor(valor); equipamento.setDescricao(descricao); }
+                Arquivo.salvar(lista, "equipamentos.dat");
+                mostrarInfo("Equipamento salvo com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar equipamento: " + ex.getMessage());
             }
-
-            if (descricao.isEmpty()) {
-                lblErro.setText("Descrição é obrigatória.");
-                return;
-            }
-
-            if (!Validador.isNumeroValido(valorTexto)) {
-                lblErro.setText("Valor inválido.");
-                return;
-            }
-
-            double valor = Validador.parseDouble(valorTexto);
-
-            if (!modoEdicao) {
-                lista.add(new Equipamento(nome, valor, descricao));
-            } else {
-                equipamento.setNome(nome);
-                equipamento.setValor(valor);
-                equipamento.setDescricao(descricao);
-            }
-
-            Arquivo.salvar(lista, "equipamentos.dat");
-            mostrarInfo("Equipamento salvo com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

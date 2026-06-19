@@ -53,36 +53,27 @@ public class CadastroView {
 
 
         btnCadastrar.setOnAction(e -> {
-
-            String erros = Validador.validarPessoa(
-                    txtNome.getText(), txtEmail.getText(), txtSenha.getText()
-            );
-            if (!erros.isEmpty()) { lblErro.setText(erros); return; }
-
-            String email = txtEmail.getText().trim();
-            String nome  = txtNome.getText().trim();
-            String senha = txtSenha.getText();
-
-
-            if (emailJaCadastrado(email)) {
-                lblErro.setText("Este email já está em uso.");
-                return;
+            try {
+                String erros = Validador.validarPessoa(txtNome.getText(), txtEmail.getText(), txtSenha.getText());
+                if (!erros.isEmpty()) { lblErro.setText(erros); return; }
+                String email = txtEmail.getText().trim();
+                String nome  = txtNome.getText().trim();
+                String senha = txtSenha.getText();
+                if (emailJaCadastrado(email)) { lblErro.setText("Este email já está em uso."); return; }
+                if (rbLocador.isSelected()) {
+                    ArrayList<Locador> lista = Arquivo.carregar("locadores.dat");
+                    lista.add(new Locador(nome, email, senha));
+                    Arquivo.salvar(lista, "locadores.dat");
+                } else if (rbLocatario.isSelected()) {
+                    ArrayList<Locatario> lista = Arquivo.carregar("locatarios.dat");
+                    lista.add(new Locatario(nome, email, senha));
+                    Arquivo.salvar(lista, "locatarios.dat");
+                }
+                mostrarInfo("Conta criada com sucesso! Faça login para continuar.");
+                stage.setScene(new LoginView().getScene(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao criar conta: " + ex.getMessage());
             }
-
-            if (rbLocador.isSelected()) {
-                ArrayList<Locador> lista = Arquivo.carregar("locadores.dat");
-                lista.add(new Locador(nome, email, senha));
-                Arquivo.salvar(lista, "locadores.dat");
-
-            } else if (rbLocatario.isSelected()) {
-                ArrayList<Locatario> lista = Arquivo.carregar("locatarios.dat");
-                lista.add(new Locatario(nome, email, senha));
-                Arquivo.salvar(lista, "locatarios.dat");
-
-            }
-
-            mostrarInfo("Conta criada com sucesso! Faça login para continuar.");
-            stage.setScene(new LoginView().getScene(stage));
         });
 
         btnVoltar.setOnAction(e ->

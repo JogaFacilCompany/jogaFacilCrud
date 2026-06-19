@@ -173,32 +173,21 @@ public class LobbyView {
         }
 
         btnSalvar.setOnAction(e -> {
-            Reserva reserva = cmbReserva.getValue();
-            boolean precisaArbitro = chkArbitro.isSelected();
-            String faltaTxt = txtJogadoresFalta.getText().trim();
-
-            if (reserva == null) {
-                lblErro.setText("Selecione uma reserva.");
-                return;
+            try {
+                Reserva reserva = cmbReserva.getValue();
+                boolean precisaArbitro = chkArbitro.isSelected();
+                String faltaTxt = txtJogadoresFalta.getText().trim();
+                if (reserva == null) { lblErro.setText("Selecione uma reserva."); return; }
+                if (faltaTxt.isEmpty() || !faltaTxt.matches("\\d+")) { lblErro.setText("Jogadores em falta deve ser um número inteiro (0 ou mais)."); return; }
+                int jogadoresEmFalta = Integer.parseInt(faltaTxt);
+                if (!modoEdicao) { lista.add(new Lobby(reserva, precisaArbitro, jogadoresEmFalta)); }
+                else { lobby.setReserva(reserva); lobby.setPrecisaArbitro(precisaArbitro); lobby.setJogadoresEmFalta(jogadoresEmFalta); }
+                Arquivo.salvar(lista, "lobbies.dat");
+                mostrarInfo("Lobby salvo com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar lobby: " + ex.getMessage());
             }
-            if (faltaTxt.isEmpty() || !faltaTxt.matches("\\d+")) {
-                lblErro.setText("Jogadores em falta deve ser um número inteiro (0 ou mais).");
-                return;
-            }
-
-            int jogadoresEmFalta = Integer.parseInt(faltaTxt);
-
-            if (!modoEdicao) {
-                lista.add(new Lobby(reserva, precisaArbitro, jogadoresEmFalta));
-            } else {
-                lobby.setReserva(reserva);
-                lobby.setPrecisaArbitro(precisaArbitro);
-                lobby.setJogadoresEmFalta(jogadoresEmFalta);
-            }
-
-            Arquivo.salvar(lista, "lobbies.dat");
-            mostrarInfo("Lobby salvo com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

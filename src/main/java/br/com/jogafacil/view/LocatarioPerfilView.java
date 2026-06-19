@@ -93,17 +93,17 @@ public class LocatarioPerfilView {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            String erros = Validador.validarPessoa(
-                    txtNome.getText(), txtEmail.getText(), txtSenha.getText()
-            );
-            if (!erros.isEmpty()) { lblErro.setText(erros); return; }
-
-            locatario.setNome(txtNome.getText().trim());
-            locatario.setEmail(txtEmail.getText().trim());
-            locatario.setSenha(txtSenha.getText());
-
-            Arquivo.salvar(todos, "locatarios.dat");
-            stage.setScene(getScene(stage));
+            try {
+                String erros = Validador.validarPessoa(txtNome.getText(), txtEmail.getText(), txtSenha.getText());
+                if (!erros.isEmpty()) { lblErro.setText(erros); return; }
+                locatario.setNome(txtNome.getText().trim());
+                locatario.setEmail(txtEmail.getText().trim());
+                locatario.setSenha(txtSenha.getText());
+                Arquivo.salvar(todos, "locatarios.dat");
+                stage.setScene(getScene(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar perfil: " + ex.getMessage());
+            }
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getScene(stage)));

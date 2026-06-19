@@ -176,56 +176,30 @@ public class TorneioView {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            String nome      = txtNome.getText().trim();
-            String premioTxt = txtPremiacao.getText().trim();
-            String dataTxt   = txtData.getText().trim();
-            String taxaTxt   = txtTaxa.getText().trim();
-            String timesTxt  = txtTimes.getText().trim();
-
-            if (nome.isEmpty()) {
-                lblErro.setText("Nome é obrigatório.");
-                return;
+            try {
+                String nome      = txtNome.getText().trim();
+                String premioTxt = txtPremiacao.getText().trim();
+                String dataTxt   = txtData.getText().trim();
+                String taxaTxt   = txtTaxa.getText().trim();
+                String timesTxt  = txtTimes.getText().trim();
+                if (nome.isEmpty()) { lblErro.setText("Nome é obrigatório."); return; }
+                if (!Validador.isNumeroValido(premioTxt)) { lblErro.setText("Premiação inválida."); return; }
+                if (!Validador.isDataValida(dataTxt)) { lblErro.setText("Data inválida. Use o formato dd/MM/yyyy."); return; }
+                if (!Validador.isNumeroValido(taxaTxt)) { lblErro.setText("Taxa de inscrição inválida."); return; }
+                if (!Validador.isInteiroPositivo(timesTxt)) { lblErro.setText("Número de times deve ser um inteiro positivo."); return; }
+                double premiacao = Validador.parseDouble(premioTxt);
+                LocalDate dataInicio = Validador.parseData(dataTxt);
+                double taxa = Validador.parseDouble(taxaTxt);
+                int numeroTimes = Integer.parseInt(timesTxt);
+                if (premiacao < 0 || taxa < 0) { lblErro.setText("Premiação e taxa não podem ser negativas."); return; }
+                if (!modoEdicao) { lista.add(new Torneio(nome, premiacao, dataInicio, taxa, numeroTimes)); }
+                else { torneio.setNome(nome); torneio.setPremiacao(premiacao); torneio.setDataInicio(dataInicio); torneio.setTaxaInscricao(taxa); torneio.setNumeroTimes(numeroTimes); }
+                Arquivo.salvar(lista, "torneios.dat");
+                mostrarInfo("Torneio salvo com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar torneio: " + ex.getMessage());
             }
-            if (!Validador.isNumeroValido(premioTxt)) {
-                lblErro.setText("Premiação inválida.");
-                return;
-            }
-            if (!Validador.isDataValida(dataTxt)) {
-                lblErro.setText("Data inválida. Use o formato dd/MM/yyyy.");
-                return;
-            }
-            if (!Validador.isNumeroValido(taxaTxt)) {
-                lblErro.setText("Taxa de inscrição inválida.");
-                return;
-            }
-            if (!Validador.isInteiroPositivo(timesTxt)) {
-                lblErro.setText("Número de times deve ser um inteiro positivo.");
-                return;
-            }
-
-            double premiacao    = Validador.parseDouble(premioTxt);
-            LocalDate dataInicio = Validador.parseData(dataTxt);
-            double taxa         = Validador.parseDouble(taxaTxt);
-            int numeroTimes     = Integer.parseInt(timesTxt);
-
-            if (premiacao < 0 || taxa < 0) {
-                lblErro.setText("Premiação e taxa não podem ser negativas.");
-                return;
-            }
-
-            if (!modoEdicao) {
-                lista.add(new Torneio(nome, premiacao, dataInicio, taxa, numeroTimes));
-            } else {
-                torneio.setNome(nome);
-                torneio.setPremiacao(premiacao);
-                torneio.setDataInicio(dataInicio);
-                torneio.setTaxaInscricao(taxa);
-                torneio.setNumeroTimes(numeroTimes);
-            }
-
-            Arquivo.salvar(lista, "torneios.dat");
-            mostrarInfo("Torneio salvo com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

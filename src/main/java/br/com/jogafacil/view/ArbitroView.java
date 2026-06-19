@@ -118,38 +118,23 @@ public class ArbitroView {
         Button btnCancelar = new Button("Cancelar");
 
         btnSalvar.setOnAction(e -> {
-            String nome     = txtNome.getText().trim();
-            String cpf      = txtCpf.getText().trim();
-            String telefone = txtTelefone.getText().trim();
-            String valorTxt = txtValor.getText().trim();
-
-            if (nome.isEmpty()) {
-                lblErro.setText("Nome é obrigatório.");
-                return;
+            try {
+                String nome     = txtNome.getText().trim();
+                String cpf      = txtCpf.getText().trim();
+                String telefone = txtTelefone.getText().trim();
+                String valorTxt = txtValor.getText().trim();
+                if (nome.isEmpty()) { lblErro.setText("Nome é obrigatório."); return; }
+                if (cpf.isEmpty()) { lblErro.setText("CPF é obrigatório."); return; }
+                if (!Validador.isNumeroValido(valorTxt)) { lblErro.setText("Valor por partida inválido."); return; }
+                double valor = Validador.parseDouble(valorTxt);
+                if (!modoEdicao) { lista.add(new Arbitro(nome, cpf, telefone, valor)); }
+                else { arbitro.setNome(nome); arbitro.setCpf(cpf); arbitro.setTelefone(telefone); arbitro.setValorPartida(valor); }
+                Arquivo.salvar(lista, "arbitros.dat");
+                mostrarInfo("Árbitro salvo com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar árbitro: " + ex.getMessage());
             }
-            if (cpf.isEmpty()) {
-                lblErro.setText("CPF é obrigatório.");
-                return;
-            }
-            if (!Validador.isNumeroValido(valorTxt)) {
-                lblErro.setText("Valor por partida inválido.");
-                return;
-            }
-
-            double valor = Validador.parseDouble(valorTxt);
-
-            if (!modoEdicao) {
-                lista.add(new Arbitro(nome, cpf, telefone, valor));
-            } else {
-                arbitro.setNome(nome);
-                arbitro.setCpf(cpf);
-                arbitro.setTelefone(telefone);
-                arbitro.setValorPartida(valor);
-            }
-
-            Arquivo.salvar(lista, "arbitros.dat");
-            mostrarInfo("Árbitro salvo com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));

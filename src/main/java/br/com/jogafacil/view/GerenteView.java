@@ -136,33 +136,22 @@ public class GerenteView {
         }
 
         btnSalvar.setOnAction(e -> {
-            String nome  = txtNome.getText().trim();
-            String email = txtEmail.getText().trim();
-            String senha = txtSenha.getText();
-            Quadra quadra = cmbQuadra.getValue();
-
-            String erros = Validador.validarPessoa(nome, email, senha);
-            if (!erros.isEmpty()) {
-                lblErro.setText(erros);
-                return;
+            try {
+                String nome  = txtNome.getText().trim();
+                String email = txtEmail.getText().trim();
+                String senha = txtSenha.getText();
+                Quadra quadra = cmbQuadra.getValue();
+                String erros = Validador.validarPessoa(nome, email, senha);
+                if (!erros.isEmpty()) { lblErro.setText(erros); return; }
+                if (quadra == null) { lblErro.setText("Selecione uma quadra."); return; }
+                if (!modoEdicao) { lista.add(new Gerente(nome, email, senha, quadra)); }
+                else { gerente.setNome(nome); gerente.setEmail(email); gerente.setSenha(senha); gerente.setQuadra(quadra); }
+                Arquivo.salvar(lista, "gerentes.dat");
+                mostrarInfo("Gerente salvo com sucesso!");
+                stage.setScene(getSceneLista(stage));
+            } catch (Exception ex) {
+                lblErro.setText("Erro ao salvar gerente: " + ex.getMessage());
             }
-            if (quadra == null) {
-                lblErro.setText("Selecione uma quadra.");
-                return;
-            }
-
-            if (!modoEdicao) {
-                lista.add(new Gerente(nome, email, senha, quadra));
-            } else {
-                gerente.setNome(nome);
-                gerente.setEmail(email);
-                gerente.setSenha(senha);
-                gerente.setQuadra(quadra);
-            }
-
-            Arquivo.salvar(lista, "gerentes.dat");
-            mostrarInfo("Gerente salvo com sucesso!");
-            stage.setScene(getSceneLista(stage));
         });
 
         btnCancelar.setOnAction(e -> stage.setScene(getSceneLista(stage)));
