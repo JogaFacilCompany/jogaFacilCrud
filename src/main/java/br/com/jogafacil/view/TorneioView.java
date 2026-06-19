@@ -122,20 +122,22 @@ public class TorneioView {
             Button btnEntrar = new Button("Entrar");
 
             btnEntrar.setOnAction(e -> {
-                Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
-
-                if (selecionado == null) {
-                    lblErro.setText("Selecione um torneio para entrar.");
+                try {
+                    Torneio selecionado = tabela.getSelectionModel().getSelectedItem();
+                    if (selecionado == null) {
+                        lblErro.setText("Selecione um torneio para entrar.");
+                        return;
+                    }
+                    if (selecionado.isOnTorneio(sessao.getUsuarioLogado())) {
+                        lblErro.setText("Você já está nesse torneio.");
+                    } else {
+                        selecionado.entrar(sessao.getUsuarioLogado());
+                        Arquivo.salvar(lista, "torneios.dat");
+                        stage.setScene(getSceneLista(stage));
+                    }
+                } catch (Exception ex) {
+                    lblErro.setText("Erro inesperado: " + ex.getMessage());
                 }
-
-                if (selecionado.isOnTorneio(sessao.getUsuarioLogado())) {
-                    lblErro.setText("Você já está nesse torneio.");
-                } else {
-                    selecionado.entrar(sessao.getUsuarioLogado());
-                    Arquivo.salvar(lista, "torneios.dat");
-                    stage.setScene(getSceneLista(stage));
-                }
-
             });
 
             HBox botoes = new HBox(10, btnEntrar, btnVoltar);

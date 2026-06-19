@@ -53,8 +53,12 @@ public class Validador {
     }
 
     public static LocalDate parseData(String texto) {
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return LocalDate.parse(texto.trim(), fmt);
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            return LocalDate.parse(texto.trim(), fmt);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
     }
 
     public static double parseDouble(String texto) {
